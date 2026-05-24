@@ -2,9 +2,13 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { api } from '@/lib/api';
+
+interface AuthUser { id: string; email: string; name: string; role: string; }
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  user: AuthUser | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
@@ -13,34 +17,45 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [checked, setChecked] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    const session = localStorage.getItem('venue_session');
-    if (session === 'authenticated') setIsAuthenticated(true);
+    const token = localStorage.getItem('venue_token');
+    const stored = localStorage.getItem('venue_user');
+    if (token && stored) {
+      setIsAuthenticated(true);
+      setUser(JSON.parse(stored));
+    }
     setChecked(true);
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Demo: any non-empty email/password works, or use preset credentials
-    if (!email || !password) return false;
-    await new Promise(r => setTimeout(r, 800)); // simulate network
-    localStorage.setItem('venue_session', 'authenticated');
-    setIsAuthenticated(true);
-    return true;
+    try {
+      const res = await api.login(email, password);
+      localStorage.setItem('venue_token', res.access_token);
+      localStorage.setItem('venue_user', JSON.stringify(res.user));
+      setIsAuthenticated(true);
+      setUser(res.user);
+      return true;
+    } catch {
+      return false;
+    }
   };
 
   const logout = () => {
-    localStorage.removeItem('venue_session');
+    localStorage.removeItem('venue_token');
+    localStorage.removeItem('venue_user');
     setIsAuthenticated(false);
+    setUser(null);
     router.push('/login');
   };
 
   if (!checked) return null;
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -5,7 +5,7 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'rec
 interface DataPoint {
   day: string;
   revenue: number;
-  covers: number;
+  covers?: number;
 }
 
 export default function RevenueChart({ data }: { data: DataPoint[] }) {
