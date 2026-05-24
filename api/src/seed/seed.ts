@@ -12,11 +12,7 @@ dotenv.config();
 
 const ds = new DataSource({
   type: 'postgres',
-  host: process.env.DB_HOST ?? 'localhost',
-  port: Number(process.env.DB_PORT ?? 5432),
-  username: process.env.DB_USER ?? 'venue_user',
-  password: process.env.DB_PASS ?? 'venue_pass',
-  database: process.env.DB_NAME ?? 'venue',
+  url: process.env.DATABASE_URL ?? 'postgres://postgres@localhost:5432/venue',
   entities: [User, Booking, VenueEvent, Guest, StaffMember, Table],
   synchronize: true,
 });
