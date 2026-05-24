@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Bell, Search, LogOut, CheckCheck } from 'lucide-react';
+import { Bell, Search, LogOut, CheckCheck, Menu } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { useSidebar } from '@/context/SidebarContext';
 import { cn } from '@/lib/utils';
 
 const notifications = [
@@ -20,6 +21,7 @@ interface TopbarProps {
 
 export default function Topbar({ title, subtitle }: TopbarProps) {
   const { logout } = useAuth();
+  const { toggle } = useSidebar();
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifs, setNotifs] = useState(notifications);
   const notifRef = useRef<HTMLDivElement>(null);
@@ -39,15 +41,24 @@ export default function Topbar({ title, subtitle }: TopbarProps) {
   const markAllRead = () => setNotifs(notifs.map(n => ({ ...n, read: true })));
 
   return (
-    <header className='h-16 border-b border-border bg-surface/60 backdrop-blur-sm flex items-center justify-between px-6 sticky top-0 z-30'>
-      <div>
-        <h1 className='text-base font-semibold text-foreground'>{title}</h1>
-        {subtitle && <p className='text-xs text-foreground-muted'>{subtitle}</p>}
+    <header className='h-16 border-b border-border bg-surface/60 backdrop-blur-sm flex items-center justify-between gap-3 px-4 sm:px-6 sticky top-0 z-30'>
+      <div className='flex items-center gap-3 min-w-0'>
+        <button
+          onClick={toggle}
+          className='md:hidden w-9 h-9 flex items-center justify-center rounded-lg hover:bg-surface-2 text-foreground-muted -ml-1'
+          aria-label='Open menu'
+        >
+          <Menu className='w-5 h-5' />
+        </button>
+        <div className='min-w-0'>
+          <h1 className='text-sm sm:text-base font-semibold text-foreground truncate'>{title}</h1>
+          {subtitle && <p className='text-xs text-foreground-muted truncate'>{subtitle}</p>}
+        </div>
       </div>
 
-      <div className='flex items-center gap-3'>
-        {/* Search */}
-        <div className='relative hidden sm:block'>
+      <div className='flex items-center gap-1.5 sm:gap-3'>
+        {/* Search — desktop only */}
+        <div className='relative hidden lg:block'>
           <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-foreground-subtle' />
           <input
             type='text'
@@ -60,16 +71,16 @@ export default function Topbar({ title, subtitle }: TopbarProps) {
         <div ref={notifRef} className='relative'>
           <button
             onClick={() => setNotifOpen(v => !v)}
-            className='relative w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-2 transition-colors'
+            className='relative w-9 h-9 flex items-center justify-center rounded-lg hover:bg-surface-2 transition-colors'
           >
             <Bell className='w-4 h-4 text-foreground-muted' />
             {unread > 0 && (
-              <span className='absolute top-1 right-1 w-2 h-2 bg-accent rounded-full' />
+              <span className='absolute top-1.5 right-1.5 w-2 h-2 bg-accent rounded-full' />
             )}
           </button>
 
           {notifOpen && (
-            <div className='absolute right-0 top-10 w-80 bg-surface border border-border rounded-2xl shadow-2xl overflow-hidden'>
+            <div className='fixed sm:absolute right-2 sm:right-0 top-14 sm:top-10 w-[calc(100vw-1rem)] sm:w-80 max-w-sm bg-surface border border-border rounded-2xl shadow-2xl overflow-hidden'>
               <div className='flex items-center justify-between px-4 py-3 border-b border-border'>
                 <span className='text-sm font-semibold text-foreground'>
                   Notifications {unread > 0 && <span className='ml-1 text-xs text-accent'>({unread})</span>}
@@ -104,8 +115,8 @@ export default function Topbar({ title, subtitle }: TopbarProps) {
           )}
         </div>
 
-        {/* Live indicator */}
-        <div className='flex items-center gap-1.5 px-2.5 py-1 bg-success-soft rounded-full'>
+        {/* Live indicator — hidden on very small screens */}
+        <div className='hidden xs:flex sm:flex items-center gap-1.5 px-2.5 py-1 bg-success-soft rounded-full'>
           <span className='w-1.5 h-1.5 bg-success rounded-full animate-pulse' />
           <span className='text-xs font-medium text-success'>Live</span>
         </div>
@@ -113,7 +124,7 @@ export default function Topbar({ title, subtitle }: TopbarProps) {
         {/* Logout */}
         <button
           onClick={logout}
-          className='w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-2 text-foreground-muted hover:text-danger transition-colors'
+          className='w-9 h-9 flex items-center justify-center rounded-lg hover:bg-surface-2 text-foreground-muted hover:text-danger transition-colors'
           title='Sign out'
         >
           <LogOut className='w-4 h-4' />
