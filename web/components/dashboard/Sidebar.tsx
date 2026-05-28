@@ -131,6 +131,16 @@ export default function Sidebar() {
               <p className='text-xs text-foreground-muted truncate'>Manager</p>
             </div>
           </div>
+
+          {/* Built by Plex */}
+          <a
+            href='https://plex.ee'
+            target='_blank'
+            rel='noopener noreferrer'
+            className='block px-3 pt-3 mt-1 border-t border-border text-[10px] uppercase tracking-[0.18em] text-foreground-subtle hover:text-accent transition-colors'
+          >
+            Built by Plex ↗
+          </a>
         </div>
       </aside>
     </>
