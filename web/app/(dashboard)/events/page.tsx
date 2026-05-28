@@ -1,5 +1,8 @@
+'use client';
+
 import Topbar from '@/components/dashboard/Topbar';
 import StatusBadge from '@/components/dashboard/StatusBadge';
+import { Can } from '@/components/Can';
 import { events } from '@/lib/mock-data';
 import { formatCurrency } from '@/lib/utils';
 import { Zap } from 'lucide-react';
@@ -11,9 +14,11 @@ export default function EventsPage() {
       <div className='p-6'>
         <div className='flex items-center justify-between mb-6'>
           <p className='text-sm text-foreground-muted'>{events.length} events scheduled</p>
-          <button className='px-4 py-1.5 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-colors'>
-            + Create Event
-          </button>
+          <Can I='create' a='Event'>
+            <button className='px-4 py-1.5 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-colors'>
+              + Create Event
+            </button>
+          </Can>
         </div>
         <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4'>
           {events.map((event) => {

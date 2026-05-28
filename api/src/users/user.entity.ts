@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
 
-export type UserRole = 'owner' | 'manager' | 'staff';
+export type UserRole = 'manager' | 'demo';
 
 @Entity('users')
 export class User {
@@ -16,7 +16,7 @@ export class User {
   @Column()
   name: string;
 
-  @Column({ default: 'manager' })
+  @Column({ default: 'demo' })
   role: UserRole;
 
   @CreateDateColumn()

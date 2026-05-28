@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Bell, Search, LogOut, CheckCheck, Menu } from 'lucide-react';
+import { Bell, Search, LogOut, CheckCheck, Menu, Eye } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useSidebar } from '@/context/SidebarContext';
 import { cn } from '@/lib/utils';
@@ -20,7 +20,8 @@ interface TopbarProps {
 }
 
 export default function Topbar({ title, subtitle }: TopbarProps) {
-  const { logout } = useAuth();
+  const { logout, user, ability } = useAuth();
+  const isDemo = ability.cannot('create', 'Booking');
   const { toggle } = useSidebar();
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifs, setNotifs] = useState(notifications);
@@ -115,11 +116,21 @@ export default function Topbar({ title, subtitle }: TopbarProps) {
           )}
         </div>
 
+        {/* Demo mode badge */}
+        {isDemo && (
+          <div className='hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-warning/10 border border-warning/20 rounded-full'>
+            <Eye className='w-3 h-3 text-warning' />
+            <span className='text-xs font-medium text-warning'>Demo</span>
+          </div>
+        )}
+
         {/* Live indicator — hidden on very small screens */}
-        <div className='hidden xs:flex sm:flex items-center gap-1.5 px-2.5 py-1 bg-success-soft rounded-full'>
-          <span className='w-1.5 h-1.5 bg-success rounded-full animate-pulse' />
-          <span className='text-xs font-medium text-success'>Live</span>
-        </div>
+        {!isDemo && (
+          <div className='hidden xs:flex sm:flex items-center gap-1.5 px-2.5 py-1 bg-success-soft rounded-full'>
+            <span className='w-1.5 h-1.5 bg-success rounded-full animate-pulse' />
+            <span className='text-xs font-medium text-success'>Live</span>
+          </div>
+        )}
 
         {/* Logout */}
         <button

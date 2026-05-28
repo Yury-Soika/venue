@@ -5,12 +5,15 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from '../users/user.entity';
 import { LoginDto } from './dto/login.dto';
+import { AbilityFactory } from '../casl/ability.factory';
+import { packRules } from '@casl/ability/extra';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private userRepo: Repository<User>,
     private jwtService: JwtService,
+    private abilityFactory: AbilityFactory,
   ) {}
 
   async login(dto: LoginDto) {
@@ -26,10 +29,26 @@ export class AuthService {
       role: user.role,
     });
 
-    return { access_token: token, user: { id: user.id, email: user.email, name: user.name, role: user.role } };
+    const ability = this.abilityFactory.defineAbilityFor(user);
+    const rules = packRules(ability.rules);
+
+    return {
+      access_token: token,
+      user: { id: user.id, email: user.email, name: user.name, role: user.role },
+      rules,
+    };
   }
 
   async me(userId: string) {
-    return this.userRepo.findOne({ where: { id: userId }, select: ['id', 'email', 'name', 'role'] });
+    const user = await this.userRepo.findOne({
+      where: { id: userId },
+      select: ['id', 'email', 'name', 'role'],
+    });
+    if (!user) return null;
+
+    const ability = this.abilityFactory.defineAbilityFor(user);
+    const rules = packRules(ability.rules);
+
+    return { id: user.id, email: user.email, name: user.name, role: user.role, rules };
   }
 }

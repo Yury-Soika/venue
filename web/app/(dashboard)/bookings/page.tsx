@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import Topbar from '@/components/dashboard/Topbar';
 import StatusBadge from '@/components/dashboard/StatusBadge';
 import Modal from '@/components/ui/Modal';
+import { Can } from '@/components/Can';
 import { bookings as initialBookings, type Booking, type BookingStatus } from '@/lib/mock-data';
 import { formatCurrency } from '@/lib/utils';
 import { Search } from 'lucide-react';
@@ -75,12 +76,14 @@ export default function BookingsPage() {
             ))}
           </div>
 
-          <button
-            onClick={() => setModalOpen(true)}
-            className='ml-auto px-4 py-2 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-colors whitespace-nowrap'
-          >
-            + New Booking
-          </button>
+          <Can I='create' a='Booking'>
+            <button
+              onClick={() => setModalOpen(true)}
+              className='ml-auto px-4 py-2 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-colors whitespace-nowrap'
+            >
+              + New Booking
+            </button>
+          </Can>
         </div>
 
         <div className='bg-surface border border-border rounded-2xl overflow-hidden'>

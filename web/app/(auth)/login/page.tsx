@@ -27,10 +27,7 @@ export default function LoginPage() {
     }
   };
 
-  const fillDemo = () => {
-    setEmail('manager@venue.ee');
-    setPassword('demo1234');
-  };
+  const fillDemo = () => { setEmail('demo@venue.ee'); setPassword('demo1234'); };
 
   return (
     <div className='min-h-screen flex items-center justify-center bg-background px-4'>
@@ -96,15 +93,17 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Demo credentials hint */}
+          {/* Demo access */}
           <div className='mt-5 pt-5 border-t border-border'>
-            <p className='text-xs text-foreground-muted text-center mb-2'>Demo account</p>
             <button
               onClick={fillDemo}
-              className='w-full py-2 bg-surface-2 hover:bg-surface-2/80 border border-border rounded-lg text-xs text-foreground-muted transition-colors'
+              className='w-full py-2.5 bg-accent/10 hover:bg-accent/20 border border-accent/30 rounded-lg text-sm text-accent font-medium transition-colors'
             >
-              Fill demo credentials
+              ✦ Try Demo
             </button>
+            <p className='text-xs text-foreground-subtle text-center mt-2.5'>
+              Read-only — explore without changing anything
+            </p>
           </div>
         </div>
       </div>

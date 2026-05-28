@@ -7,6 +7,7 @@ import { GuestsModule } from './guests/guests.module';
 import { StaffModule } from './staff/staff.module';
 import { TablesModule } from './tables/tables.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { CaslModule } from './casl/casl.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
     StaffModule,
     TablesModule,
     AnalyticsModule,
+    CaslModule,
   ],
 })
 export class AppModule {}

@@ -40,7 +40,7 @@ async function seed() {
   const hash = await bcrypt.hash('demo1234', 10);
   await userRepo.save([
     { email: 'manager@venue.ee', password: hash, name: 'Carlos Rivera', role: 'manager' as const },
-    { email: 'owner@venue.ee', password: hash, name: 'Alex Stone', role: 'owner' as const },
+    { email: 'demo@venue.ee', password: hash, name: 'Demo User', role: 'demo' as const },
   ]);
 
   // Tables

@@ -6,6 +6,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { User } from '../users/user.entity';
+import { CaslModule } from '../casl/casl.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { User } from '../users/user.entity';
       secret: process.env.JWT_SECRET ?? 'venue_secret',
       signOptions: { expiresIn: '7d' },
     }),
+    CaslModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
